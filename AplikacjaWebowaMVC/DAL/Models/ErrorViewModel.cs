@@ -1,6 +1,6 @@
 using System;
 
-namespace AplikacjaWebowaMVC.Models
+namespace AplikacjaWebowaMVC.DAL.Models
 {
     public class ErrorViewModel
     {

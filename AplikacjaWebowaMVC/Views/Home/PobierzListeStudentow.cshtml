@@ -1,0 +1,35 @@
+﻿@model List<AplikacjaWebowaMVC.DAL.Models.Student>
+
+<h1>Studenci</h1>
+<hr />
+<table>
+    <thead>
+        <tr>
+            <th>
+                Czas
+            </th>
+            <th>
+                Miejsce
+            </th>
+            <th>
+                Nazwa
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @{foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.NumerIndeksu
+                    </td>
+                    <td>
+                        @item.Imie
+                    </td>
+                    <td>
+                        @item.Nazwisko
+                    </td>
+                </tr>
+            }}
+    </tbody>
+</table>

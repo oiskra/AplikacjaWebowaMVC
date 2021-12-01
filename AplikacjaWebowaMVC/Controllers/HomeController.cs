@@ -1,37 +1,55 @@
-﻿using AplikacjaWebowaMVC.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using AplikacjaWebowaMVC.DAL.Models;
+using AplikacjaWebowaMVC.Services;
+using AplikacjaWebowaMVC.Interfaces;
+using AplikacjaWebowaMVC.DAL.Contexts;
 using System.Linq;
-using System.Threading.Tasks;
 
-namespace AplikacjaWebowaMVC.Controllers
+public class HomeController : Controller
 {
-    public class HomeController : Controller
+    public readonly IObslugaBazydanych obslugaBazydanych;
+
+    public HomeController(IObslugaBazydanych obslugaBazydanych)
     {
-        private readonly ILogger<HomeController> _logger;
+        this.obslugaBazydanych = obslugaBazydanych;
+    }
 
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
+    public IActionResult Index()
+    {
+        return View();
+    }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+    [HttpGet]
+    [Route("Studenci")]
+    public IActionResult PobierzListeStudentow()
+    {   
+        return View(obslugaBazydanych.PobierzListeStudentow());
+    }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+    [HttpPost]
+    [Route("DodajStudenta/{id}/{imie}/nazwisko")]
+    public IActionResult DodajStudenta(string id, string imie, string nazwisko)
+    {
+        Student student = obslugaBazydanych.DodajStudenta(id, imie, nazwisko);
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        if (student == null)
+            return BadRequest(new { komunikat = $"Nie udało się dodać studenta o indeksie: {student.NumerIndeksu}" });
+
+        return Ok(new {komunikat = $"Dodano studenta o indeksie: {student.NumerIndeksu}" });
+    }
+
+    [HttpPost]
+    [Route("UsunStudenta/{id}")]
+    public IActionResult UsunStudenta(string id)
+    {
+        Student student = obslugaBazydanych.UsunStudenta(id);
+        if (student == null)
+            return BadRequest($"Nie udało się usunąć studenta o indeksie: {student.NumerIndeksu}");
+
+        return Ok($"Usunięto studenta o indeksie: {student.NumerIndeksu}");
+
     }
 }
