@@ -15,6 +15,8 @@ using AplikacjaWebowaMVC.Services;
 using Microsoft.EntityFrameworkCore;
 using AplikacjaWebowaMVC.DAL.Contexts;
 using AplikacjaWebowaMVC.DAL.Models;
+using System.Reflection;
+using System.IO;
 
 namespace AplikacjaWebowaMVC
 {
@@ -34,11 +36,27 @@ namespace AplikacjaWebowaMVC
 
             services.AddControllersWithViews();
 
-            services.AddSwaggerGen(x =>
+            services.AddSwaggerGen(options =>
             {
-                x.SwaggerDoc("wersja",
-               new OpenApiInfo { Title = "AplikacjaWebowa", Version = "v1" });
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "ToDo API",
+                    Description = "An ASP.NET Core Web API for managing ToDo items",
+                    TermsOfService = new Uri("https://example.com/terms"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Example Contact",
+                        Url = new Uri("https://example.com/contact")
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "Example License",
+                        Url = new Uri("https://example.com/license")
+                    }
+                });
             });
+
 
             services.AddScoped<IObslugaBazydanych, ObslugaBazydanych>();
 
@@ -55,6 +73,9 @@ namespace AplikacjaWebowaMVC
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI();
+                
             }
             else
             {
@@ -71,7 +92,10 @@ namespace AplikacjaWebowaMVC
 
             var swaggerOptions = new SwaggerOptions();
             Configuration.GetSection(nameof(SwaggerOptions)).Bind(swaggerOptions);
-            app.UseSwagger(option => { option.RouteTemplate = swaggerOptions.JsonRoute; });
+            app.UseSwagger(option => { 
+                option.RouteTemplate = swaggerOptions.JsonRoute;
+                option.SerializeAsV2 = true;
+            });
             app.UseSwaggerUI(option => {
                 option.SwaggerEndpoint(swaggerOptions.UIEndpoint,
                 swaggerOptions.Description);

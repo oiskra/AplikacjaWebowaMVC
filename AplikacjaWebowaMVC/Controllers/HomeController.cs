@@ -30,15 +30,15 @@ public class HomeController : Controller
     }
 
     [HttpPost]
-    [Route("DodajStudenta/{id}/{imie}/nazwisko")]
+    [Route("DodajStudenta/{id}/{imie}/{nazwisko}")]
     public IActionResult DodajStudenta(string id, string imie, string nazwisko)
     {
-        Student student = obslugaBazydanych.DodajStudenta(id, imie, nazwisko);
+        Student student = obslugaBazydanych.DodajStudenta(id,imie,nazwisko);
 
         if (student == null)
-            return BadRequest(new { komunikat = $"Nie udało się dodać studenta o indeksie: {student.NumerIndeksu}" });
+            return BadRequest($"Nie udałow się dodać studenta o id: {id}");
 
-        return Ok(new {komunikat = $"Dodano studenta o indeksie: {student.NumerIndeksu}" });
+        return Ok($"Dodano studenta o indeksie: {student.NumerIndeksu}");
     }
 
     [HttpPost]

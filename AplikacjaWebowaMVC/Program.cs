@@ -27,8 +27,7 @@ namespace AplikacjaWebowaMVC
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
-                    
+                    webBuilder.UseStartup<Startup>();  
                 });
 
         private static void CreateDbIfNotExists(IHost host)
@@ -36,8 +35,10 @@ namespace AplikacjaWebowaMVC
             using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
+                
                 try
                 {
+                    
                     var context = services.GetRequiredService<DziekanatContext>();
                     DziekanatDatabaseInitializer.Initialize(context);
                 }
